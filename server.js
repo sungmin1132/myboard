@@ -228,11 +228,12 @@ app.post("/login", function (req, res) {
     if(result.userpw==sha(req.body.userpw)){
       req.session.user=req.body;
       console.log('새로운 로그인');
-      res.render('index.ejs',{user: req.session.user, data: result});
+      mydb.collection('post').find().toArray().then(posts => {
+      res.render('index.ejs',{user: req.session.user, data: posts});
+      });
     }else{
       res.render('login.ejs', { error: '비밀번호가 틀렸습니다.' });
     }
-    
   });
 });
 
