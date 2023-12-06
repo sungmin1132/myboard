@@ -20,16 +20,6 @@ mongoclient
     console.log(err);
   });
 
-// MySQL + nodejs 접속 코드
-var mysql = require("mysql2");
-var conn = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "1132",
-  database: "myboard",
-});
-
-conn.connect();
 
 const express = require("express");
 const app = express();
