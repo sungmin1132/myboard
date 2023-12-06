@@ -1,0 +1,62 @@
+*{
+    font-family: Arial, Helvetica, sans-serif
+}
+
+body {
+    
+    background-image: url("https://mblogthumb-phinf.pstatic.net/MjAxNjEyMDhfMjg0/MDAxNDgxMjA1NjY4OTM0.b2vjV-nlqlr3Y8dXsygr99WWeSi_be1ce2aqfW3b4uAg.atOOtUmeqZAHJ2TfpDzSDNCpZ4JAkThblP1L6NdX_bUg.JPEG.vuv77/7.jpg?type=w800");
+
+    background-color: #f8f9fa; /* 연한 배경색 */
+    font-family: 'Arial', sans-serif; /* 폰트 스타일 */
+  }
+  
+  .card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto; /* 카드 중앙 정렬 */
+    margin-right: auto;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* 그림자 효과 */
+    transition: 0.3s; /* 마우스 오버 시 효과 */
+    border-radius: 5px; /* 테두리 둥글게 */
+    background-image: url("https://mblogthumb-phinf.pstatic.net/MjAxNjEyMDhfMjg0/MDAxNDgxMjA1NjY4OTM0.b2vjV-nlqlr3Y8dXsygr99WWeSi_be1ce2aqfW3b4uAg.atOOtUmeqZAHJ2TfpDzSDNCpZ4JAkThblP1L6NdX_bUg.JPEG.vuv77/7.jpg?type=w800");
+  }
+  
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3); /* 마우스 오버 시 그림자 효과 강조 */
+  }
+  
+  .card-body {
+    padding: 2em; /* 카드 내부 여백 */
+  }
+  
+  .card-title {
+    color: #333; /* 제목 색상 */
+    margin-bottom: 0.5em;
+  }
+  
+  .card-subtitle {
+    color: #6c757d; /* 부제목 색상 */
+    margin-bottom: 2em;
+  }
+  
+  .card-text {
+    color: #555; /* 본문 색상 */
+    margin-bottom: 2em;
+  }
+  
+  .card img {
+    max-width: 100%; /* 이미지 크기 조정 */
+    height: auto;
+    display: block;
+    margin-bottom: 2em;
+  }
+  
+  .card-link {
+    color: #007bff; /* 링크 색상 */
+    font-weight: bold;
+  }
+  
+  .card-link:hover {
+    color: #0056b3; /* 링크 마우스 오버 색상 */
+  }
+  

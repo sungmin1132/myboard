@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User List</title>
+</head>
+<link href="index.css" rel="stylesheet">
+<body>
+    <h1>USER 목록 </h1>
+    <ul>
+        <% userids.forEach(function(user) { %>
+            <li><%= user.userid %></li>
+            <button onclick="addFriend('<%= user.userid %>')">친구추가하기</button>
+
+        <% }); %>
+    </ul>
+</body>
+</html>
