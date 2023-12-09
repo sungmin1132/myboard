@@ -3,15 +3,11 @@ const ObjId = require('mongodb').ObjectId;
 const url =
 'mongodb+srv://User:1132@atlascluster.lxv1ys9.mongodb.net/?retryWrites=true&w=majority';
 let mydb;
-mongoclient
+mongoclient //mongoDB 연결
   .connect(url)
   .then((client) => {
 
     mydb = client.db('myboard');
-    // mydb.collection('post').find().toArray().then(result =>{
-    //     console.log(result);
-    // })
-
     app.listen(8080, function () {
       console.log("포트 8080으로 서버 대기중 ... ");
     });
@@ -20,19 +16,11 @@ mongoclient
     console.log(err);
   });
 
-
 const express = require("express");
 const app = express();
-const sha = require('sha256');
-const multer = require('multer');
-const upload = multer({dest:'upload/'});
-
-let cookieParser = require('cookie-parser');
-app.use(cookieParser('ak3jkl2jldjlk12'));
-app.get('/cookie', (req,res)=>{
-  res.cookie('milk', '1000원',{signed:true});
-  res.send('product: '+req.signedCookies.milk);
-});
+const sha = require('sha256'); 
+const multer = require('multer'); // 파일 업로드를 위한 라이브러리
+const upload = multer({dest:'upload/'}); // 파일 업로드를 위한 미들웨어
 
 let session= require('express-session');
 app.use(session({
@@ -41,7 +29,7 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-let storage = multer.diskStorage({
+let storage = multer.diskStorage({ //이미지 업로드 설정
   destination: function(req, file, done){
     done(null, './public/image');
   },
@@ -50,18 +38,18 @@ let storage = multer.diskStorage({
   }
 });
 
-let upload2 = multer({storage: storage});
+let upload2 = multer({storage: storage}); 
 
 
 
 
-app.get('/session', (req,res)=>{
-  if(isNaN(req.session.milk)){
-    req.session.milk =0;
-  }
-  req.session.milk = req.session.milk+1000;
-  res.send('session: '+req.session.milk+'원');
-});
+// app.get('/session', (req,res)=>{
+//   if(isNaN(req.session.milk)){
+//     req.session.milk =0;
+//   }
+//   req.session.milk = req.session.milk+1000;
+//   res.send('session: '+req.session.milk+'원');
+// });
 
 app.use(express.static('public'));
 //body-parser 라이브러리 추가
@@ -92,7 +80,7 @@ app.get("/list", function (req, res) {
     }
 });
 
-// let imagepath = '';
+let imagepath = null;
 app.post('/photo', upload2.single('picture'), function(req, res){
   console.log(req.file.path);
   imagepath = '/image/' + req.file.filename;
@@ -123,7 +111,6 @@ app.get('/search', function(req, res){
 });
 
 
-
 app.get('/login', function(req, res){ 
   mydb.collection('post').find().toArray().then(result => {
   console.log(req.session); 
@@ -136,7 +123,6 @@ app.get('/login', function(req, res){
   }
   );
 });
-
 
 
 
@@ -167,12 +153,11 @@ app.get('/logout', function(req, res){
 app.get("/content/:id", function (req, res) { 
   const id = req.params.id;
 
-  // Validate the ID format
+  // ID 형식 체크
   if (!id.match(/^[0-9a-fA-F]{24}$/)) {
     console.error("Invalid ID format: ", id);
     return res.status(400).send("Invalid ID format");
   }
-
   try {
     let new_id = new ObjId(id);
 
@@ -200,10 +185,15 @@ app.get("/edit/:id", function (req, res) {
     console.log(result);
 
     if (req.session.user.userid != result.userid) {
-      res.send('<script>alert("수정 권한이 없습니다."); history.back();</script>');
+      res.send('<script>alert("수정 권한이 없습니다."); history.back();</script>')
+      .catch(err => {
+        console.error(err);
+        res.status(500).send();
+      });
       return;
     }
 
+    
     res.render('edit.ejs', { data : result });
   }).catch(err =>{
     console.log(err);
@@ -213,19 +203,26 @@ app.get("/edit/:id", function (req, res) {
 
 app.post("/login", function (req, res) { 
   
-  mydb.collection('account').findOne({ userid: req.body.userid})
+  mydb.collection('account').findOne({ userid: req.body.userid })
   .then(result => {
-    if(result.userpw==sha(req.body.userpw)){
-      req.session.user=req.body;
-      console.log('새로운 로그인');
-      mydb.collection('post').find().toArray().then(posts => {
-      res.render('index.ejs',{user: req.session.user, data: posts});
-      });
-    }else{
-      res.render('login.ejs', { error: '비밀번호가 틀렸습니다.' });
+    if (result) {
+      if (result.userpw == sha(req.body.userpw)) {
+        req.session.user = req.body;
+        console.log('새로운 로그인');
+        mydb.collection('post').find().toArray().then(posts => {
+          res.render('index.ejs', { user: req.session.user, data: posts });
+        });
+      } else {
+        // 비밀번호가 일치하지 않는 경우
+        return res.send('<script>alert("비밀번호가 다릅니다"); history.back();</script>');
+      }
+    } else {
+      // 사용자가 존재하지 않는 경우
+      return res.send('<script>alert("존재하지 않는 아이디입니다"); history.back();</script>');
     }
+  })
   });
-});
+
 
 //'/save' 요청에 대한 post 방식의 처리 루틴
 app.post('/save', function(req, res){
@@ -350,8 +347,13 @@ app.get("/userlist", function (req, res) {
     .then(users => {
       res.render('userlist.ejs', { userids: users });
     })
-    .catch(err => {
-      console.error(err);
-      res.status(500).send("Error retrieving user list.");
-    });
+});
+
+app.get("/user-posts/:userid", function(req, res) {
+  const userId = req.params.userid;
+  mydb.collection('post').find({ userid: userId }).toArray()
+    .then(posts => {
+      // 'userposts.ejs'는 사용자의 게시물을 표시하는 템플릿.
+      res.render('userposts.ejs', { posts: posts, userid: userId });
+    })
 });
