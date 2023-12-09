@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= userid %>'s 의 포스트 목록</title>
+</head>
+<body>
+    <link href="/content.css" rel="stylesheet">
+
+    <h1><%= userid %>의 포스트</h1>
+    <ul>
+        <% posts.forEach(function(post) { %>
+            <li><%= post.title %> - <%= post.content %></li>
+        <% }); %>
+    </ul>
+</body>
+</html>
